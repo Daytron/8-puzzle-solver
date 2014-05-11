@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+test.py
+another_work_test.py
 
 # C extensions
 *.so
