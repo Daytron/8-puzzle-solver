@@ -30,8 +30,8 @@ COLOR_BLANK_TILE = 'Teal'
 tile_counter_input = 1
 
 # Pattern lists for initial and goal states
-tile_list_init = []
-tile_list_goal = []
+initState = []
+goalState = []
 
 # Boolean status variables
 isDrawGoalText = False
@@ -183,7 +183,7 @@ def draw(canvas):
 
     if isDrawInstGoal is True:
         canvas.draw_text("Key-in the goal state:", (470, 170), 30, 'Black', 'serif')
-        if len(tile_list_goal) is 9:
+        if len(goalState) is 9:
             isDrawInstGoal = False
 
     # Drawing puzzle tiles
@@ -192,7 +192,7 @@ def draw(canvas):
 
     draw_tile_counter = 1
 
-    for tile_puzzle in tile_list_init:
+    for tile_puzzle in initState:
         x_puzzle = x_centre
         y_puzzle = y_centre
 
@@ -227,7 +227,7 @@ def draw(canvas):
         n_centre = ((n + n + s) / 2) - 10
         m_centre = ((m + m + s) / 2) + 15
 
-        for tile_goal in tile_list_goal:
+        for tile_goal in goalState:
             x_goal = n_centre
             y_goal = m_centre
 
@@ -279,20 +279,20 @@ def activateDrawGoalText():
 
 # Mouseclick handler for initial and goal state inputs
 def mouse_handler_input(pos):
-    global tile_counter_input, tile_list_init, isTile1LockOn, isTile2LockOn, \
+    global tile_counter_input, initState, isTile1LockOn, isTile2LockOn, \
             isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
-            isTile7LockOn, isTile8LockOn, isTile9LockOn, tile_list_goal
+            isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState
 
-    #print "tile_list_init:", tile_list_init
+    #print "initState:", initState
     if tile_counter_input < 10:
 
         if isTile1LockOn is True:
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    tile_list_init.append('1')
+                    initState.append('1')
                 else:
-                    tile_list_goal.append('1')
+                    goalState.append('1')
                 tile_counter_input += 1
                 isTile1LockOn = False
 
@@ -300,9 +300,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    tile_list_init.append('2')
+                    initState.append('2')
                 else:
-                    tile_list_goal.append('2')
+                    goalState.append('2')
                 tile_counter_input += 1
                 isTile2LockOn = False
 
@@ -310,9 +310,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    tile_list_init.append('3')
+                    initState.append('3')
                 else:
-                    tile_list_goal.append('3')
+                    goalState.append('3')
                 tile_counter_input += 1
                 isTile3LockOn = False
 
@@ -320,9 +320,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    tile_list_init.append('4')
+                    initState.append('4')
                 else:
-                    tile_list_goal.append('4')
+                    goalState.append('4')
                 tile_counter_input += 1
                 isTile4LockOn = False
 
@@ -330,9 +330,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    tile_list_init.append('5')
+                    initState.append('5')
                 else:
-                    tile_list_goal.append('5')
+                    goalState.append('5')
                 tile_counter_input += 1
                 isTile5LockOn = False
 
@@ -340,9 +340,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    tile_list_init.append('6')
+                    initState.append('6')
                 else:
-                    tile_list_goal.append('6')
+                    goalState.append('6')
                 tile_counter_input += 1
                 isTile6LockOn = False
                 return None
@@ -351,9 +351,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    tile_list_init.append('7')
+                    initState.append('7')
                 else:
-                    tile_list_goal.append('7')
+                    goalState.append('7')
                 tile_counter_input += 1
                 isTile7LockOn = False
 
@@ -361,9 +361,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    tile_list_init.append('8')
+                    initState.append('8')
                 else:
-                    tile_list_goal.append('8')
+                    goalState.append('8')
                 tile_counter_input += 1
                 isTile8LockOn = False
 
@@ -371,9 +371,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    tile_list_init.append('0')
+                    initState.append('0')
                 else:
-                    tile_list_goal.append('0')
+                    goalState.append('0')
                 tile_counter_input += 1
                 isTile9LockOn = False
 
@@ -382,9 +382,18 @@ def mouse_handler_input(pos):
             activateDrawGoalText()
 
 
+def button_find_solution():
+    open = [initState]
+    closed = []
+
+    while
+
+
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 frame.set_canvas_background('Silver')
 frame.set_draw_handler(draw)
 frame.set_mouseclick_handler(mouse_handler_input)
+
+button1 = frame.add_button('Find Solution', button_find_solution)
 
 frame.start()
