@@ -402,7 +402,7 @@ def button_find_solution():
         if x.node == goalState:
             for state in closed:
                 print state.node
-            # print x.node
+            print x.node
             return None
         else:
             x.generate_children(master_states)
