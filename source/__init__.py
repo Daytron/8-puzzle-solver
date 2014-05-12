@@ -1,7 +1,7 @@
 __author__ = 'DaytronSledge'
 
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-import classes
+from classes import *
 
 # Constants
 # Canvas size
@@ -32,6 +32,8 @@ tile_counter_input = 1
 # Pattern lists for initial and goal states
 initState = []
 goalState = []
+master_states = []
+open = []
 
 # Boolean status variables
 isDrawGoalText = False
@@ -217,7 +219,7 @@ def draw(canvas):
             x_puzzle = x_centre + (2 * s)
             y_puzzle = y_centre + (2 * s)
         if tile_puzzle is not '0':
-            canvas.draw_text(tile_puzzle, (x_puzzle, y_puzzle), 40, 'Black', 'monospace')
+            canvas.draw_text(str(tile_puzzle), (x_puzzle, y_puzzle), 40, 'Black', 'monospace')
 
         draw_tile_counter += 1
 
@@ -252,7 +254,7 @@ def draw(canvas):
                 x_goal = n_centre + (2 * s)
                 y_goal = m_centre + (2 * s)
             if tile_goal is not '0':
-                canvas.draw_text(tile_goal, (x_goal, y_goal), 40, 'Black', 'monospace')
+                canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
 
             draw_tile_cntr += 1
 
@@ -290,9 +292,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    initState.append('1')
+                    initState.append(1)
                 else:
-                    goalState.append('1')
+                    goalState.append(1)
                 tile_counter_input += 1
                 isTile1LockOn = False
 
@@ -300,9 +302,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    initState.append('2')
+                    initState.append(2)
                 else:
-                    goalState.append('2')
+                    goalState.append(2)
                 tile_counter_input += 1
                 isTile2LockOn = False
 
@@ -310,9 +312,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
                 if isDrawGoalText is False:
-                    initState.append('3')
+                    initState.append(3)
                 else:
-                    goalState.append('3')
+                    goalState.append(3)
                 tile_counter_input += 1
                 isTile3LockOn = False
 
@@ -320,9 +322,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    initState.append('4')
+                    initState.append(4)
                 else:
-                    goalState.append('4')
+                    goalState.append(4)
                 tile_counter_input += 1
                 isTile4LockOn = False
 
@@ -330,9 +332,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    initState.append('5')
+                    initState.append(5)
                 else:
-                    goalState.append('5')
+                    goalState.append(5)
                 tile_counter_input += 1
                 isTile5LockOn = False
 
@@ -340,9 +342,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
                 if isDrawGoalText is False:
-                    initState.append('6')
+                    initState.append(6)
                 else:
-                    goalState.append('6')
+                    goalState.append(6)
                 tile_counter_input += 1
                 isTile6LockOn = False
                 return None
@@ -351,9 +353,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    initState.append('7')
+                    initState.append(7)
                 else:
-                    goalState.append('7')
+                    goalState.append(7)
                 tile_counter_input += 1
                 isTile7LockOn = False
 
@@ -361,9 +363,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    initState.append('8')
+                    initState.append(8)
                 else:
-                    goalState.append('8')
+                    goalState.append(8)
                 tile_counter_input += 1
                 isTile8LockOn = False
 
@@ -371,9 +373,9 @@ def mouse_handler_input(pos):
             if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
                     (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
                 if isDrawGoalText is False:
-                    initState.append('0')
+                    initState.append(0)
                 else:
-                    goalState.append('0')
+                    goalState.append(0)
                 tile_counter_input += 1
                 isTile9LockOn = False
 
@@ -383,10 +385,62 @@ def mouse_handler_input(pos):
 
 
 def button_find_solution():
-    open = [initState]
+    # note: all open and closed lists hold OBJECTS not lists of tiles
+    global master_states, isItInitialGN, open
+    # print goalState
+    # create object for initial state and save to master states list
+    master_states.append(State(initState,initState,goalState,0))
+    # print master_states
+    open.append(master_states[0])
     closed = []
 
-    while
+    while open:
+        x = open[0]
+        open.pop(0)
+        # print "x is", x
+
+        if x.node == goalState:
+            for state in closed:
+                print state.node
+            # print x.node
+            return None
+        else:
+            x.generate_children(master_states)
+            # print "x children:", x.children
+            for child in x.children:
+                master_states.append(State(child,initState,goalState,(x.gn + 1)))
+                if not (master_states[-1] in open or master_states[-1] in closed):
+                    open.append(master_states[-1])
+            closed.append(x)
+            # print open
+            reorder_heuristics()
+
+
+def reorder_heuristics():
+    global  open
+
+    temp_list = list(open)
+    del open[:]
+    print temp_list
+    lowest = temp_list[0].fn
+    low_obj = temp_list[0]
+    counter = 0
+
+    while len(temp_list) > 0:
+        if  temp_list[counter].fn < lowest:
+            lowest = temp_list[counter].fn
+            low_obj = temp_list[counter]
+        counter += 1
+        if counter == len(temp_list):
+            open.append(low_obj)
+            #print low_obj
+            #print temp_list
+            temp_list.remove(low_obj)
+            if temp_list:
+                lowest = temp_list[0].fn
+                low_obj = temp_list[0]
+            counter = 0
+
 
 
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
