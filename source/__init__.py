@@ -34,6 +34,7 @@ initState = []
 goalState = []
 master_states = []
 open = []
+solution_path = []
 
 # Boolean status variables
 isDrawGoalText = False
@@ -218,7 +219,7 @@ def draw(canvas):
         elif draw_tile_counter is 9:
             x_puzzle = x_centre + (2 * s)
             y_puzzle = y_centre + (2 * s)
-        if tile_puzzle is not '0':
+        if tile_puzzle is not 0:
             canvas.draw_text(str(tile_puzzle), (x_puzzle, y_puzzle), 40, 'Black', 'monospace')
 
         draw_tile_counter += 1
@@ -253,7 +254,7 @@ def draw(canvas):
             elif draw_tile_cntr is 9:
                 x_goal = n_centre + (2 * s)
                 y_goal = m_centre + (2 * s)
-            if tile_goal is not '0':
+            if tile_goal is not 0:
                 canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
 
             draw_tile_cntr += 1
@@ -386,7 +387,7 @@ def mouse_handler_input(pos):
 
 def button_find_solution():
     # note: all open and closed lists hold OBJECTS not lists of tiles
-    global master_states, isItInitialGN, open
+    global master_states, isItInitialGN, open, solution_path
     # print goalState
     # create object for initial state and save to master states list
     master_states.append(State(initState,initState,goalState,0))
@@ -397,12 +398,12 @@ def button_find_solution():
     while open:
         x = open[0]
         open.pop(0)
-        # print "x is", x
 
         if x.node == goalState:
             for state in closed:
-                print state.node
-            print x.node
+                solution_path.append(state)
+            solution_path.append(x)
+            display_solution()
             return None
         else:
             x.generate_children(master_states)
@@ -421,7 +422,6 @@ def reorder_heuristics():
 
     temp_list = list(open)
     del open[:]
-    print temp_list
     lowest = temp_list[0].fn
     low_obj = temp_list[0]
     counter = 0
@@ -441,6 +441,13 @@ def reorder_heuristics():
                 low_obj = temp_list[0]
             counter = 0
 
+def display_solution():
+    print "The solution path:"
+    for node in solution_path:
+        print node.node[0], node.node[1], node.node[2]
+        print node.node[3], node.node[4], node.node[5]
+        print node.node[6], node.node[7], node.node[8]
+        print ""
 
 
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
