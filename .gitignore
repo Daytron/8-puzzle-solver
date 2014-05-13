@@ -3,7 +3,11 @@ __pycache__/
 *.py[cod]
 test.py
 another_work_test.py
+<<<<<<< HEAD
 workspace.xml
+=======
+.idea/
+>>>>>>> ad5ccfb963b54443eda0bb8bd8824950ef38a9e7
 
 # C extensions
 *.so
