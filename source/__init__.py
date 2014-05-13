@@ -3,7 +3,7 @@ __author__ = 'DaytronSledge'
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from classes import *
 
-# Constants
+#### Constants ####
 # Canvas size
 WIDTH = 900
 HEIGHT = 620
@@ -25,15 +25,21 @@ COLOR_PUZZLE_BG = 'White'
 COLOR_TILE_BORDER = 'Black'
 COLOR_BLANK_TILE = 'Teal'
 
-# Global variables
+#### Global variables ####
 # Tile counter
 tile_counter_input = 1
 
 # Pattern lists for initial and goal states
 initState = []
 goalState = []
+
+# Master list of all class State objects created
 master_states = []
+
+# Var for A star algorithm
 open = []
+
+# Solution path list (objects)
 solution_path = []
 
 # Boolean status variables
@@ -128,9 +134,6 @@ def draw(canvas):
     # Positions for drawing the number
     v_centre = ((v + v + s) / 2) - 10
     w_centre = ((w + w + s) / 2) + 15
-
-    # Draw puzzle text
-    #canvas.draw_text('Goal State', (50, 400), 22, 'Black', 'serif')
 
     if isTile1LockOn is True:
         canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
@@ -258,7 +261,6 @@ def draw(canvas):
                 canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
 
             draw_tile_cntr += 1
-
     return None
 
 # resets some variables, ready for goal state inputs
@@ -451,6 +453,7 @@ def display_solution():
 
 
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
+
 frame.set_canvas_background('Silver')
 frame.set_draw_handler(draw)
 frame.set_mouseclick_handler(mouse_handler_input)
