@@ -58,6 +58,11 @@ isTile9LockOn = True
 
 
 def draw(canvas):
+    """
+    :description: Draw handler for the frame canvas
+    :param canvas: Frame's canvas
+    :return: None
+    """
     global isDrawInstGoal
     # Positions for puzzle tiles
     x = X_POS_PUZZLE
@@ -263,8 +268,12 @@ def draw(canvas):
             draw_tile_cntr += 1
     return None
 
-# resets some variables, ready for goal state inputs
-def activateDrawGoalText():
+
+def initiate_draw_goal_state():
+    """
+    :description: Resets variables, ready for goal state input
+    :return: None
+    """
     global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, isDrawInstPuzzle, \
             isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, isDrawInstGoal
 
@@ -282,8 +291,13 @@ def activateDrawGoalText():
     isTile8LockOn = True
     isTile9LockOn = True
 
-# Mouseclick handler for initial and goal state inputs
+
 def mouse_handler_input(pos):
+    """
+    :description: Mouse click handler for initial and goal state inputs
+    :param pos: Mouse click position [x,y]
+    :return: None
+    """
     global tile_counter_input, initState, isTile1LockOn, isTile2LockOn, \
             isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
             isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState
@@ -384,16 +398,19 @@ def mouse_handler_input(pos):
 
     if tile_counter_input is 10:
         if isDrawGoalText is False:
-            activateDrawGoalText()
+            initiate_draw_goal_state()
 
 
 def button_find_solution():
-    # note: all open and closed lists hold OBJECTS not lists of tiles
+    """
+    :description: Starts searching for solution using A star algorithm
+        note: all open and closed lists hold OBJECTS not lists of tiles
+    :return: None
+    """
     global master_states, isItInitialGN, open, solution_path
     # print goalState
     # create object for initial state and save to master states list
     master_states.append(State(initState,initState,goalState,0))
-    # print master_states
     open.append(master_states[0])
     closed = []
 
@@ -409,7 +426,7 @@ def button_find_solution():
             return None
         else:
             x.generate_children(master_states)
-            # print "x children:", x.children
+
             for child in x.children:
                 master_states.append(State(child,initState,goalState,(x.gn + 1)))
                 if not (master_states[-1] in open or master_states[-1] in closed):
@@ -417,9 +434,15 @@ def button_find_solution():
             closed.append(x)
             # print open
             reorder_heuristics()
+    print "Failed to find a solution"
 
 
 def reorder_heuristics():
+    """
+    :description: Re-arrange the objects generated stored in open variable
+        according to their f(n) values from lowest to highest
+    :return: None
+    """
     global  open
 
     temp_list = list(open)
@@ -443,21 +466,33 @@ def reorder_heuristics():
                 low_obj = temp_list[0]
             counter = 0
 
+
 def display_solution():
-    print "The solution path:"
+    """
+    :description: Displays the formatted solution output into the console
+    :return: None
+    """
+    i = 0
+    print "The goal can be reached in " + str(len(solution_path)-1) + " moves."
     for node in solution_path:
+        if i == 0:
+            print "Initial state:"
+        else:
+            print "Move", i
         print node.node[0], node.node[1], node.node[2]
         print node.node[3], node.node[4], node.node[5]
         print node.node[6], node.node[7], node.node[8]
         print ""
+        i += 1
 
-
+# Frame initialisation
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 
+# Frame settings and control handlers initialisation
 frame.set_canvas_background('Silver')
 frame.set_draw_handler(draw)
 frame.set_mouseclick_handler(mouse_handler_input)
-
 button1 = frame.add_button('Find Solution', button_find_solution)
 
+# Frame call/Program starts here
 frame.start()
