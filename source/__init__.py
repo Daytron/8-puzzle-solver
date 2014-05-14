@@ -39,8 +39,17 @@ master_states = []
 # Var for A star algorithm
 open = []
 
-# Solution path list (objects)
+# Explored path list (objects)
+explored_states = []
+
+# Solution/Moves to reach goal (objects)
 solution_path = []
+
+# List of tiles (integers), use for displaying tiles in the canvas
+puzzle_state = []
+
+# Flag counter for timer handler
+timer_counter = 0
 
 # Boolean status variables
 isDrawGoalText = False
@@ -203,7 +212,7 @@ def draw(canvas):
 
     draw_tile_counter = 1
 
-    for tile_puzzle in initState:
+    for tile_puzzle in puzzle_state:
         x_puzzle = x_centre
         y_puzzle = y_centre
 
@@ -300,7 +309,7 @@ def mouse_handler_input(pos):
     """
     global tile_counter_input, initState, isTile1LockOn, isTile2LockOn, \
             isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
-            isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState
+            isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState, puzzle_state
 
     #print "initState:", initState
     if tile_counter_input < 10:
@@ -396,6 +405,8 @@ def mouse_handler_input(pos):
                 tile_counter_input += 1
                 isTile9LockOn = False
 
+        puzzle_state = list(initState)
+
     if tile_counter_input is 10:
         if isDrawGoalText is False:
             initiate_draw_goal_state()
@@ -407,7 +418,7 @@ def button_find_solution():
         note: all open and closed lists hold OBJECTS not lists of tiles
     :return: None
     """
-    global master_states, isItInitialGN, open, solution_path
+    global master_states, isItInitialGN, open, explored_states
     # print goalState
     # create object for initial state and save to master states list
     master_states.append(State(initState,initState,goalState,0))
@@ -420,8 +431,10 @@ def button_find_solution():
 
         if x.node == goalState:
             for state in closed:
-                solution_path.append(state)
-            solution_path.append(x)
+                explored_states.append(state)
+            explored_states.append(x)
+
+            find_path()
             display_solution()
             return None
         else:
@@ -467,11 +480,39 @@ def reorder_heuristics():
             counter = 0
 
 
+def find_path():
+    global solution_path
+
+    same_obj_flag = True
+
+
+    for e, node in enumerate(explored_states):
+        if e < (len(explored_states)-1):
+            if explored_states[e+1].node in node.children:
+                solution_path.append(node)
+            else:
+                same_obj_flag = True
+                i = e + 2
+                while same_obj_flag == True:
+                    if i < len(explored_states):
+                        if explored_states[i].node in node.children:
+                            solution_path.append(node)
+                            same_obj_flag = False
+                        else:
+                            i += 1
+                    else:
+                        same_obj_flag = False
+
+        else:
+            solution_path.append(node)
+
+
 def display_solution():
     """
-    :description: Displays the formatted solution output into the console
+    :description: Formats and displays solution output into the console
     :return: None
     """
+
     i = 0
     print "The goal can be reached in " + str(len(solution_path)-1) + " moves."
     for node in solution_path:
@@ -485,6 +526,24 @@ def display_solution():
         print ""
         i += 1
 
+def timer_handler():
+    global timer_counter, puzzle_state
+
+    timer_counter += 1
+    if timer_counter < len(solution_path):
+        puzzle_state = solution_path[timer_counter].node
+    else:
+
+        timer_counter = 0
+        timer.stop()
+
+
+def button_show_solution():
+    global puzzle_state
+    puzzle_state = initState
+    timer.start()
+
+
 # Frame initialisation
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 
@@ -492,7 +551,12 @@ frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 frame.set_canvas_background('Silver')
 frame.set_draw_handler(draw)
 frame.set_mouseclick_handler(mouse_handler_input)
-button1 = frame.add_button('Find Solution', button_find_solution)
+button1 = frame.add_button('Find Solution', button_find_solution, 120)
+label = frame.add_label('')
+button2 = frame.add_button('Show Solution', button_show_solution, 120)
+
+# Timer initialisation
+timer = simplegui.create_timer(500, timer_handler)
 
 # Frame call/Program starts here
 frame.start()
