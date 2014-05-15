@@ -87,7 +87,8 @@ def draw(canvas):
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
     canvas.draw_polygon([[x + s, y], [x + s, y + s], [x + (2 * s), y + s], [x + (2 * s), y]], 2, COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
-    canvas.draw_polygon([[x + (2 * s), y], [x + (2 * s), y + s], [x + (3 * s), y + s], [x + (3 * s), y]], 2, COLOR_TILE_BORDER,
+    canvas.draw_polygon([[x + (2 * s), y], [x + (2 * s), y + s], [x + (3 * s), y + s], [x + (3 * s), y]], 2,
+                        COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
 
     canvas.draw_polygon([[x, y + s], [x, y + (2 * s)], [x + s, y + (2 * s)], [x + s, y + s]], 2, COLOR_TILE_BORDER,
@@ -99,7 +100,8 @@ def draw(canvas):
         COLOR_TILE_BORDER,
         COLOR_PUZZLE_BG)
 
-    canvas.draw_polygon([[x, y + (2 * s)], [x, y + (3 * s)], [x + s, y + (3 * s)], [x + s, y + (2 * s)]], 2, COLOR_TILE_BORDER,
+    canvas.draw_polygon([[x, y + (2 * s)], [x, y + (3 * s)], [x + s, y + (3 * s)], [x + s, y + (2 * s)]], 2,
+                        COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
     canvas.draw_polygon(
         [[x + s, y + (2 * s)], [x + s, y + (3 * s)], [x + (2 * s), y + (3 * s)], [x + (2 * s), y + (2 * s)]], 2,
@@ -284,7 +286,7 @@ def initiate_draw_goal_state():
     :return: None
     """
     global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, isDrawInstPuzzle, \
-            isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, isDrawInstGoal
+        isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, isDrawInstGoal
 
     tile_counter_input = 0
     isDrawInstPuzzle = False
@@ -308,8 +310,8 @@ def mouse_handler_input(pos):
     :return: None
     """
     global tile_counter_input, initState, isTile1LockOn, isTile2LockOn, \
-            isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
-            isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState, puzzle_state
+        isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
+        isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState, puzzle_state
 
     #print "initState:", initState
     if tile_counter_input < 10:
@@ -421,7 +423,7 @@ def button_find_solution():
     global master_states, isItInitialGN, open, explored_states
     # print goalState
     # create object for initial state and save to master states list
-    master_states.append(State(initState,initState,goalState,0))
+    master_states.append(State(initState, initState, goalState, 0))
     open.append(master_states[0])
     closed = []
 
@@ -441,7 +443,7 @@ def button_find_solution():
             x.generate_children(master_states)
 
             for child in x.children:
-                master_states.append(State(child,initState,goalState,(x.gn + 1)))
+                master_states.append(State(child, initState, goalState, (x.gn + 1)))
                 if not (master_states[-1] in open or master_states[-1] in closed):
                     open.append(master_states[-1])
             closed.append(x)
@@ -456,7 +458,7 @@ def reorder_heuristics():
         according to their f(n) values from lowest to highest
     :return: None
     """
-    global  open
+    global open
 
     temp_list = list(open)
     del open[:]
@@ -465,7 +467,7 @@ def reorder_heuristics():
     counter = 0
 
     while len(temp_list) > 0:
-        if  temp_list[counter].fn < lowest:
+        if temp_list[counter].fn < lowest:
             lowest = temp_list[counter].fn
             low_obj = temp_list[counter]
         counter += 1
@@ -481,31 +483,36 @@ def reorder_heuristics():
 
 
 def find_path():
+    """
+    :description: Filters explored path found to find the optimise path.
+    :return: None
+    """
     global solution_path
 
-    same_obj_flag = True
-
-
-    for e, node in enumerate(explored_states):
-        if e < (len(explored_states)-1):
-            if explored_states[e+1].node in node.children:
-                solution_path.append(node)
-            else:
-                same_obj_flag = True
-                i = e + 2
-                while same_obj_flag == True:
-                    if i < len(explored_states):
-                        if explored_states[i].node in node.children:
-                            solution_path.append(node)
-                            same_obj_flag = False
+    skip_state = []
+    next_index_elem = 0
+    for i, node in enumerate(reversed(explored_states)):
+        if not (i in skip_state):
+            print "i:", i
+            if i < (len(explored_states)-1):
+                if node.node in explored_states[i+1].children:
+                    solution_path.append(node.node)
+                else:
+                    skip_state.append(i+1)
+                    next_index_elem = i + 2
+                    while True:
+                        if next_index_elem < len(explored_states):
+                            if node.node in explored_states[i].children:
+                                solution_path.append(node.node)
+                                break
+                            else:
+                                skip_state.append(next_index_elem)
+                                next_index_elem += 1
                         else:
-                            i += 1
-                    else:
-                        same_obj_flag = False
-
-        else:
-            solution_path.append(node)
-
+                            break
+            else:
+                solution_path.append(node.node)
+    reversed(solution_path)
 
 def display_solution():
     """
@@ -514,7 +521,7 @@ def display_solution():
     """
 
     i = 0
-    print "The goal can be reached in " + str(len(solution_path)-1) + " moves."
+    print "The goal can be reached in " + str(len(solution_path) - 1) + " moves."
     for node in solution_path:
         if i == 0:
             print "Initial state:"
@@ -526,7 +533,12 @@ def display_solution():
         print ""
         i += 1
 
+
 def timer_handler():
+    """
+    :description: Sets the the solution animation using timer
+    :return: None
+    """
     global timer_counter, puzzle_state
 
     timer_counter += 1
@@ -539,6 +551,10 @@ def timer_handler():
 
 
 def button_show_solution():
+    """
+    :description: Button function for initialising solution path display view in the canvas
+    :return: None
+    """
     global puzzle_state
     puzzle_state = initState
     timer.start()
