@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 test.py
 another_work_test.py
-
+EightPuzzleTestSets.pdf
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 **/.idea/*.iws
