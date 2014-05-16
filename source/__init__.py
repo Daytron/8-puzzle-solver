@@ -488,22 +488,25 @@ def find_path():
     :return: None
     """
     global solution_path
-
+    rev_solution = []
     skip_state = []
     next_index_elem = 0
-    for i, node in enumerate(reversed(explored_states)):
+    rev_states = explored_states[::-1]
+    #for o in rev_states:
+        #print o.node
+    for i, node in enumerate(rev_states):
         if not (i in skip_state):
-            print "i:", i
-            if i < (len(explored_states)-1):
-                if node.node in explored_states[i+1].children:
-                    solution_path.append(node.node)
+            #print "i:", i
+            if i < (len(rev_states)-1):
+                if node.node in rev_states[i+1].children:
+                    rev_solution.append(node.node)
                 else:
                     skip_state.append(i+1)
                     next_index_elem = i + 2
                     while True:
-                        if next_index_elem < len(explored_states):
-                            if node.node in explored_states[i].children:
-                                solution_path.append(node.node)
+                        if next_index_elem < len(rev_states):
+                            if node.node in rev_states[next_index_elem].children:
+                                rev_solution.append(node.node)
                                 break
                             else:
                                 skip_state.append(next_index_elem)
@@ -511,8 +514,11 @@ def find_path():
                         else:
                             break
             else:
-                solution_path.append(node.node)
-    reversed(solution_path)
+                rev_solution.append(node.node)
+    solution_path = rev_solution[::-1]
+    #print solution_path
+    #print skip_state
+
 
 def display_solution():
     """
@@ -527,9 +533,9 @@ def display_solution():
             print "Initial state:"
         else:
             print "Move", i
-        print node.node[0], node.node[1], node.node[2]
-        print node.node[3], node.node[4], node.node[5]
-        print node.node[6], node.node[7], node.node[8]
+        print node[0], node[1], node[2]
+        print node[3], node[4], node[5]
+        print node[6], node[7], node[8]
         print ""
         i += 1
 
@@ -543,7 +549,7 @@ def timer_handler():
 
     timer_counter += 1
     if timer_counter < len(solution_path):
-        puzzle_state = solution_path[timer_counter].node
+        puzzle_state = solution_path[timer_counter]
     else:
 
         timer_counter = 0
