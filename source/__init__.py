@@ -1,17 +1,15 @@
-__author__ = 'DaytronSledge'
-
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from classes import *
 
 #### Constants ####
 # Canvas size
-WIDTH = 900
+WIDTH = 700
 HEIGHT = 620
 
 # Starting coordinates for initial state, goal state and input key
 X_POS_PUZZLE = 50
 Y_POS_PUZZLE = 80
-X_POS_INPUT = 500
+X_POS_INPUT = 400
 Y_POS_INPUT = 200
 X_POS_GOAL = 50
 Y_POS_GOAL = 370
@@ -20,6 +18,7 @@ Y_POS_GOAL = 370
 TILE_WIDE = 70
 
 # Default colors
+CANVAS_BG = 'LightSkyBlue'
 COLOR_INPUT_BG = 'White'
 COLOR_PUZZLE_BG = 'White'
 COLOR_TILE_BORDER = 'Black'
@@ -83,9 +82,9 @@ def draw(canvas):
 
     # Draw puzzle text
     if isButtonShowSolutionOn is False:
-        canvas.draw_text('Initial State', (50, 70), 22, 'Black', 'serif')
+        canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'monospace')
     else:
-        canvas.draw_text('Solution:', (50, 70), 22, 'Black', 'serif')
+        canvas.draw_text('Solution:', (50, 70), 25, 'Black')
 
     # Draw puzzle tiles
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -123,7 +122,7 @@ def draw(canvas):
     s = TILE_WIDE
 
     # Draw puzzle text
-    canvas.draw_text('Goal State', (50, 360), 22, 'Black', 'serif')
+    canvas.draw_text('Goal State', (50, 360), 25, 'Black', 'monospace')
 
     # Draw puzzle tiles
     canvas.draw_polygon([[n, m], [n, m + s], [n + s, m + s], [n + s, m]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -205,10 +204,10 @@ def draw(canvas):
 
     # Draw instructions for input for both initial and goal state
     if isInputPuzzleInstructionOn is True:
-        canvas.draw_text("Key-in the initial state:", (470, 170), 30, 'Black', 'serif')
+        canvas.draw_text("Key-in the initial state:", (X_POS_INPUT - 7, 170), 25, 'Black', 'serif')
 
     if isInputGoalInstructionOn is True:
-        canvas.draw_text("Key-in the goal state:", (470, 170), 30, 'Black', 'serif')
+        canvas.draw_text("Key-in the goal state:", (X_POS_INPUT - 7, 170), 25, 'Black', 'serif')
         if len(goalState) is 9:
             isInputGoalInstructionOn = False
 
@@ -585,17 +584,37 @@ def button_show_solution():
         puzzle_state = list(initState)
         timer.start()
 
+def quit_application():
+    if timer.is_running() is True:
+        timer.stop()
+    frame.stop()
 
 # Frame initialisation
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 
 # Frame settings and control handlers initialisation
-frame.set_canvas_background('Silver')
+frame.set_canvas_background(CANVAS_BG)
 frame.set_draw_handler(draw)
 frame.set_mouseclick_handler(mouse_handler_input)
+label1 = frame.add_label('8 Puzzle Solver')
+blankSpace1 = frame.add_label('')
+label2 = frame.add_label('Instruction:')
+label3 =  frame.add_label('1. Enter initial and goal state')
+label4 = frame.add_label('  by clicking a tile one at a time')
+label5 = frame.add_label('2. Click Find Solution button')
+label6 = frame.add_label('3. Click Show solution button')
+
+blankSpace2 = frame.add_label('')
 button1 = frame.add_button('Find Solution', button_find_solution, 120)
-label = frame.add_label('')
+blankSpace3 = frame.add_label('')
 button2 = frame.add_button('Show Solution', button_show_solution, 120)
+
+blankSpace4 = frame.add_label('')
+blankSpace5 = frame.add_label('')
+blankSpace6 = frame.add_label('')
+blankSpace7 = frame.add_label('')
+button3 =  frame.add_button('Quit', quit_application, 120)
+
 
 # Timer initialisation
 timer = simplegui.create_timer(500, timer_handler)
