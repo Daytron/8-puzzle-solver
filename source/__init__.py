@@ -36,7 +36,7 @@ goalState = []
 master_states = []
 
 # Var for A star algorithm
-open = []
+openStates = []
 
 # Explored path list (objects)
 explored_states = []
@@ -426,25 +426,25 @@ def mouse_handler_input(pos):
 def button_find_solution():
     """
     :description: Starts searching for solution using A star algorithm
-        note: all open and closed lists hold OBJECTS not lists of tiles
+        note: all openStates and closedStates lists hold OBJECTS not lists of tiles
     :return: None
     """
-    global master_states, isItInitialGN, open, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn
+    global master_states, isItInitialGN, openStates, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn
 
     if isButtonFindSolutionOn is True:
         # print goalState
         # create object for initial state and save to master states list
         master_states.append(State(initState, initState, goalState, 0))
-        open.append(master_states[0])
-        closed = []
+        openStates.append(master_states[0])
+        closedStates = []
 
-        while open:
-            x = open[0]
-            open.pop(0)
+        while openStates:
+            x = openStates[0]
+            openStates.pop(0)
 
             # Checks if the goal state is found
             if x.node == goalState:
-                for state in closed:
+                for state in closedStates:
                     explored_states.append(state)
                 explored_states.append(x)
 
@@ -461,24 +461,25 @@ def button_find_solution():
 
                 for child in x.children:
                     master_states.append(State(child, initState, goalState, (x.gn + 1)))
-                    if not (master_states[-1] in open or master_states[-1] in closed):
-                        open.append(master_states[-1])
-                closed.append(x)
-                # print open
+                    if not (master_states[-1] in openStates or master_states[-1] in closedStates):
+                        openStates.append(master_states[-1])
+                closedStates.append(x)
+                # print openStates
                 reorder_heuristics()
-        print "Failed to find a solution"
+        else:
+            print "Failed to find a solution"
 
 
 def reorder_heuristics():
     """
-    :description: Re-arrange the objects generated stored in open variable
+    :description: Re-arrange the objects generated stored in openStates variable
         according to their f(n) values from lowest to highest
     :return: None
     """
-    global open
+    global openStates
 
-    temp_list = list(open)
-    del open[:]
+    temp_list = list(openStates)
+    del openStates[:]
     lowest = temp_list[0].fn
     low_obj = temp_list[0]
     counter = 0
@@ -489,7 +490,7 @@ def reorder_heuristics():
             low_obj = temp_list[counter]
         counter += 1
         if counter == len(temp_list):
-            open.append(low_obj)
+            openStates.append(low_obj)
             #print low_obj
             #print temp_list
             temp_list.remove(low_obj)
@@ -584,7 +585,11 @@ def button_show_solution():
         puzzle_state = list(initState)
         timer.start()
 
-def quit_application():
+def button_quit_application():
+    """
+    :description: Button function to quit program
+    :return: None
+    """
     if timer.is_running() is True:
         timer.stop()
     frame.stop()
@@ -613,7 +618,7 @@ blankSpace4 = frame.add_label('')
 blankSpace5 = frame.add_label('')
 blankSpace6 = frame.add_label('')
 blankSpace7 = frame.add_label('')
-button3 =  frame.add_button('Quit', quit_application, 120)
+button3 =  frame.add_button('Quit', button_quit_application, 120)
 
 
 # Timer initialisation
