@@ -53,8 +53,8 @@ timer_counter = 0
 
 # Boolean status variables
 isDrawGoalText = False
-isDrawInstPuzzle = True
-isDrawInstGoal = False
+isInputPuzzleInstructionOn = True
+isInputGoalInstructionOn = False
 isTile1LockOn = True
 isTile2LockOn = True
 isTile3LockOn = True
@@ -64,7 +64,8 @@ isTile6LockOn = True
 isTile7LockOn = True
 isTile8LockOn = True
 isTile9LockOn = True
-
+isButtonFindSolutionOn = False
+isButtonShowSolutionOn = False
 
 def draw(canvas):
     """
@@ -72,7 +73,7 @@ def draw(canvas):
     :param canvas: Frame's canvas
     :return: None
     """
-    global isDrawInstGoal
+    global isInputGoalInstructionOn, puzzle_state
     # Positions for puzzle tiles
     x = X_POS_PUZZLE
     y = Y_POS_PUZZLE
@@ -81,7 +82,10 @@ def draw(canvas):
     s = TILE_WIDE
 
     # Draw puzzle text
-    canvas.draw_text('Initial State', (50, 70), 22, 'Black', 'serif')
+    if isButtonShowSolutionOn is False:
+        canvas.draw_text('Initial State', (50, 70), 22, 'Black', 'serif')
+    else:
+        canvas.draw_text('Solution:', (50, 70), 22, 'Black', 'serif')
 
     # Draw puzzle tiles
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -200,21 +204,25 @@ def draw(canvas):
                             COLOR_TILE_BORDER, COLOR_BLANK_TILE)
 
     # Draw instructions for input for both initial and goal state
-    if isDrawInstPuzzle is True:
+    if isInputPuzzleInstructionOn is True:
         canvas.draw_text("Key-in the initial state:", (470, 170), 30, 'Black', 'serif')
 
-    if isDrawInstGoal is True:
+    if isInputGoalInstructionOn is True:
         canvas.draw_text("Key-in the goal state:", (470, 170), 30, 'Black', 'serif')
         if len(goalState) is 9:
-            isDrawInstGoal = False
+            isInputGoalInstructionOn = False
 
     # Drawing puzzle tiles
+
+    if isButtonFindSolutionOn is False and isButtonShowSolutionOn is False:
+        puzzle_state = list(initState)
+
     x_centre = ((x + x + s) / 2) - 10
     y_centre = ((y + y + s) / 2) + 15
 
     draw_tile_counter = 1
 
-    for tile_puzzle in puzzle_state:
+    for tile_init in puzzle_state:
         x_puzzle = x_centre
         y_puzzle = y_centre
 
@@ -238,8 +246,8 @@ def draw(canvas):
         elif draw_tile_counter is 9:
             x_puzzle = x_centre + (2 * s)
             y_puzzle = y_centre + (2 * s)
-        if tile_puzzle is not 0:
-            canvas.draw_text(str(tile_puzzle), (x_puzzle, y_puzzle), 40, 'Black', 'monospace')
+        if tile_init is not 0:
+            canvas.draw_text(str(tile_init), (x_puzzle, y_puzzle), 40, 'Black', 'monospace')
 
         draw_tile_counter += 1
 
@@ -285,12 +293,13 @@ def initiate_draw_goal_state():
     :description: Resets variables, ready for goal state input
     :return: None
     """
-    global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, isDrawInstPuzzle, \
-        isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, isDrawInstGoal
+    global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, isInputPuzzleInstructionOn, \
+        isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, \
+        isInputGoalInstructionOn, isButtonFindSolutionOn
 
     tile_counter_input = 0
-    isDrawInstPuzzle = False
-    isDrawInstGoal = True
+    isInputPuzzleInstructionOn = False
+    isInputGoalInstructionOn = True
     isDrawGoalText = True
     isTile1LockOn = True
     isTile2LockOn = True
@@ -302,6 +311,7 @@ def initiate_draw_goal_state():
     isTile8LockOn = True
     isTile9LockOn = True
 
+    isButtonFindSolutionOn = True
 
 def mouse_handler_input(pos):
     """
@@ -420,36 +430,44 @@ def button_find_solution():
         note: all open and closed lists hold OBJECTS not lists of tiles
     :return: None
     """
-    global master_states, isItInitialGN, open, explored_states
-    # print goalState
-    # create object for initial state and save to master states list
-    master_states.append(State(initState, initState, goalState, 0))
-    open.append(master_states[0])
-    closed = []
+    global master_states, isItInitialGN, open, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn
 
-    while open:
-        x = open[0]
-        open.pop(0)
+    if isButtonFindSolutionOn is True:
+        # print goalState
+        # create object for initial state and save to master states list
+        master_states.append(State(initState, initState, goalState, 0))
+        open.append(master_states[0])
+        closed = []
 
-        if x.node == goalState:
-            for state in closed:
-                explored_states.append(state)
-            explored_states.append(x)
+        while open:
+            x = open[0]
+            open.pop(0)
 
-            find_path()
-            display_solution()
-            return None
-        else:
-            x.generate_children(master_states)
+            # Checks if the goal state is found
+            if x.node == goalState:
+                for state in closed:
+                    explored_states.append(state)
+                explored_states.append(x)
 
-            for child in x.children:
-                master_states.append(State(child, initState, goalState, (x.gn + 1)))
-                if not (master_states[-1] in open or master_states[-1] in closed):
-                    open.append(master_states[-1])
-            closed.append(x)
-            # print open
-            reorder_heuristics()
-    print "Failed to find a solution"
+                find_path()
+                display_solution()
+
+                isButtonFindSolutionOn = False
+                isButtonShowSolutionOn = True
+                return None
+
+            # Otherwise keep looking by expanding more states
+            else:
+                x.generate_children(master_states)
+
+                for child in x.children:
+                    master_states.append(State(child, initState, goalState, (x.gn + 1)))
+                    if not (master_states[-1] in open or master_states[-1] in closed):
+                        open.append(master_states[-1])
+                closed.append(x)
+                # print open
+                reorder_heuristics()
+        print "Failed to find a solution"
 
 
 def reorder_heuristics():
@@ -562,8 +580,10 @@ def button_show_solution():
     :return: None
     """
     global puzzle_state
-    puzzle_state = initState
-    timer.start()
+
+    if isButtonShowSolutionOn is True:
+        puzzle_state = list(initState)
+        timer.start()
 
 
 # Frame initialisation
