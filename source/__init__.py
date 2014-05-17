@@ -22,7 +22,7 @@ CANVAS_BG = 'LightSkyBlue'
 COLOR_INPUT_BG = 'White'
 COLOR_PUZZLE_BG = 'White'
 COLOR_TILE_BORDER = 'Black'
-COLOR_BLANK_TILE = 'Teal'
+
 
 #### Global variables ####
 # Tile counter
@@ -49,6 +49,9 @@ puzzle_state = []
 
 # Flag counter for timer handler
 timer_counter = 0
+
+# Number of moves for the solution path for the puzzle
+num_moves = 0
 
 # Boolean status variables
 isDrawGoalText = False
@@ -80,10 +83,24 @@ def draw(canvas):
     # Square size
     s = TILE_WIDE
 
+    # Draw Title logo
+    # canvas.draw_image(image, center_source, width_height_source, center_dest, width_height_dest, rotation)
+    # Draw an image that was previously loaded. center_source is a pair of coordinates
+    # giving the position of the center of the image,
+    # while center_dest is a pair of screen coordinates specifying where the center of the image should be drawn
+    # on the canvas.
+    # width_height_source is a pair of integers giving the size of the original image,
+    # while width_height_dest is a pair of integers giving the size of how the images should be drawn.
+    # The image can be rotated clockwise by rotation radians.
+    #
+    # You can draw the whole image file or just part of it.
+    # The source information (center_source and width_height_source) specifies which pixels to display.
+    # If it attempts to use any pixels outside of the actual file size, then no image will be drawn.
+    # Specifying a different width or height in the destination than in the source will rescale the image.
+    canvas.draw_image(image_logo, (298 / 2, 60 / 2), (298, 60), (520, 50), (298, 60))
+
     # Draw puzzle text
-    canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'monospace')
-
-
+    canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'sans-serif')
 
     # Draw puzzle tiles
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -121,7 +138,7 @@ def draw(canvas):
     s = TILE_WIDE
 
     # Draw puzzle text
-    canvas.draw_text('Goal State', (50, 360), 25, 'Black', 'monospace')
+    canvas.draw_text('Goal State', (50, 360), 25, 'Black', 'sans-serif')
 
     # Draw puzzle tiles
     canvas.draw_polygon([[n, m], [n, m + s], [n + s, m + s], [n + s, m]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -194,14 +211,14 @@ def draw(canvas):
 
     if isTile9LockOn is True:
         canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
-                             [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_BLANK_TILE)
+                             [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
     # Draw instructions for input for both initial and goal state
     if isInputPuzzleInstructionOn is True:
-        canvas.draw_text("Key-in the initial state:", (X_POS_INPUT - 7, 170), 25, 'Black', 'serif')
+        canvas.draw_text("Key-in the initial state:", (X_POS_INPUT - 7, 185), 25, 'Black', 'serif')
 
     if isInputGoalInstructionOn is True:
-        canvas.draw_text("Key-in the goal state:", (X_POS_INPUT - 7, 170), 25, 'Black', 'serif')
+        canvas.draw_text("Key-in the goal state:", (X_POS_INPUT - 7, 185), 25, 'Black', 'serif')
         if len(goalState) is 9:
             isInputGoalInstructionOn = False
 
@@ -278,7 +295,7 @@ def draw(canvas):
     if isButtonShowSolutionOn is True and isButtonFindSolutionOn is False:
         tile_counter = 1
 
-        canvas.draw_text('Solution:', (X_POS_INPUT, 170), 25, 'Black')
+        canvas.draw_text('Solution:', (X_POS_INPUT, 185), 25, 'Black','sans-serif')
 
         canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + s, w], [v + s, w + s], [v + (2 * s), w + s], [v + (2 * s), w]], 2, COLOR_TILE_BORDER,
@@ -300,6 +317,13 @@ def draw(canvas):
                              [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
 
+        canvas.draw_text("Solution found.",(X_POS_INPUT-90,460),23,'DarkRed','sans-serif')
+        canvas.draw_text("* The goal state can be reached in "+str(num_moves)+" moves.",
+            (X_POS_INPUT-90,490),20,'Black','sans-serif')
+        canvas.draw_text("* There are "+str(len(explored_states))+" states explored.",
+            (X_POS_INPUT-90,515),20,'Black','sans-serif')
+        canvas.draw_text("* Click 'Show solution' button",
+            (X_POS_INPUT-90, 540),20,'Black','sans-serif')
         for tile_soln in puzzle_state:
             v_soln = v_centre
             w_soln = w_centre
@@ -589,9 +613,10 @@ def display_solution():
     :description: Formats and displays solution output into the console
     :return: None
     """
-
+    global num_moves
     i = 0
-    print "The goal can be reached in " + str(len(solution_path) - 1) + " moves."
+    num_moves = len(solution_path) - 1
+    print "The goal can be reached in " + str(num_moves) + " moves."
     for node in solution_path:
         if i == 0:
             print "Initial state:"
@@ -640,6 +665,8 @@ def button_quit_application():
         timer.stop()
     frame.stop()
 
+image_logo = simplegui.load_image('file:///X:/GIT_ROOT/8-puzzle-solver/logo.png')
+
 # Frame initialisation
 frame = simplegui.create_frame("8 Puzzle Solver", WIDTH, HEIGHT)
 
@@ -650,10 +677,11 @@ frame.set_mouseclick_handler(mouse_handler_input)
 label1 = frame.add_label('8 Puzzle Solver')
 blankSpace1 = frame.add_label('')
 label2 = frame.add_label('Instruction:')
-label3 =  frame.add_label('1. Enter initial and goal state')
-label4 = frame.add_label('  by clicking a tile one at a time')
-label5 = frame.add_label('2. Click Find Solution button')
-label6 = frame.add_label('3. Click Show solution button')
+label3 =  frame.add_label('1. Enter initial and goal states')
+label4 = frame.add_label('  by clicking one tile at a time')
+label5 = frame.add_label(' on keypad on the right')
+label6 = frame.add_label('2. Click Find Solution button')
+label7 = frame.add_label('3. Click Show solution button')
 
 blankSpace2 = frame.add_label('')
 button1 = frame.add_button('Find Solution', button_find_solution, 120)
