@@ -1,0 +1,54 @@
+Test unit
+
+1. 
+Initial State:
+134
+805
+726
+
+Goal State:
+123
+804
+765
+
+Number of moves: 6
+
+2.
+Initial State:
+231
+708
+654
+
+Goal State:
+123
+804
+765
+
+Number of moves: 14
+
+3.
+Initial State:
+123
+804
+765
+
+Goal State:
+231
+804
+765
+
+Number of moves: 16
+
+
+4.
+Initial State:
+278
+103
+564
+
+Goal State:
+518
+620
+743
+
+Number of moves: 13
