@@ -1,7 +1,8 @@
 import math
 
+
 class State:
-    def __init__(self,node,start,goal,gn):
+    def __init__(self, node, start, goal, gn):
         """
         :description: The class constructor
         :param node: The pattern or state using list of values (integers)
@@ -18,7 +19,7 @@ class State:
         self.temp = []
         self.fn = self.gn + self.hn
 
-    def generate_children(self,master_list):
+    def generate_children(self, master_list):
         """
         :description: Generates children of current object by identifying possible tile moves.
         :param master_list: List of objects generated from main program
@@ -31,70 +32,69 @@ class State:
                 if n == 0:
                     a = self.node[1]
                     b = self.node[3]
-                    self.generate_child(1,0,a,master_list)
-                    self.generate_child(3,0,b,master_list)
+                    self.generate_child(1, 0, a, master_list)
+                    self.generate_child(3, 0, b, master_list)
                     break
                 elif n == 1:
                     a = self.node[0]
                     b = self.node[2]
                     c = self.node[4]
-                    self.generate_child(0,1,a,master_list)
-                    self.generate_child(2,1,b,master_list)
-                    self.generate_child(4,1,c,master_list)
+                    self.generate_child(0, 1, a, master_list)
+                    self.generate_child(2, 1, b, master_list)
+                    self.generate_child(4, 1, c, master_list)
                     break
                 elif n == 2:
                     a = self.node[1]
                     b = self.node[5]
-                    self.generate_child(1,2,a,master_list)
-                    self.generate_child(5,2,b,master_list)
+                    self.generate_child(1, 2, a, master_list)
+                    self.generate_child(5, 2, b, master_list)
                     break
                 elif n == 3:
                     a = self.node[0]
                     b = self.node[4]
                     c = self.node[6]
-                    self.generate_child(0,3,a,master_list)
-                    self.generate_child(4,3,b,master_list)
-                    self.generate_child(6,3,c,master_list)
+                    self.generate_child(0, 3, a, master_list)
+                    self.generate_child(4, 3, b, master_list)
+                    self.generate_child(6, 3, c, master_list)
                     break
                 elif n == 4:
                     a = self.node[1]
                     b = self.node[3]
                     c = self.node[5]
                     d = self.node[7]
-                    self.generate_child(1,4,a,master_list)
-                    self.generate_child(3,4,b,master_list)
-                    self.generate_child(5,4,c,master_list)
-                    self.generate_child(7,4,d,master_list)
+                    self.generate_child(1, 4, a, master_list)
+                    self.generate_child(3, 4, b, master_list)
+                    self.generate_child(5, 4, c, master_list)
+                    self.generate_child(7, 4, d, master_list)
                     break
                 elif n == 5:
                     a = self.node[2]
                     b = self.node[4]
                     c = self.node[8]
-                    self.generate_child(2,5,a,master_list)
-                    self.generate_child(4,5,b,master_list)
-                    self.generate_child(8,5,c,master_list)
+                    self.generate_child(2, 5, a, master_list)
+                    self.generate_child(4, 5, b, master_list)
+                    self.generate_child(8, 5, c, master_list)
                     break
                 elif n == 6:
                     a = self.node[3]
                     b = self.node[7]
-                    self.generate_child(3,6,a,master_list)
-                    self.generate_child(7,6,b,master_list)
+                    self.generate_child(3, 6, a, master_list)
+                    self.generate_child(7, 6, b, master_list)
                     break
                 elif n == 7:
                     a = self.node[6]
                     b = self.node[4]
                     c = self.node[8]
-                    self.generate_child(6,7,a,master_list)
-                    self.generate_child(4,7,b,master_list)
-                    self.generate_child(8,7,c,master_list)
+                    self.generate_child(6, 7, a, master_list)
+                    self.generate_child(4, 7, b, master_list)
+                    self.generate_child(8, 7, c, master_list)
                     break
                 elif n == 8:
                     a = self.node[5]
                     b = self.node[7]
-                    self.generate_child(5,8,a,master_list)
-                    self.generate_child(7,8,b,master_list)
+                    self.generate_child(5, 8, a, master_list)
+                    self.generate_child(7, 8, b, master_list)
                     break
-
 
     def get_tiles(self):
         """
@@ -104,8 +104,7 @@ class State:
         """
         return self.node
 
-
-    def generate_child(self,a,b, val, states_list):
+    def generate_child(self, a, b, val, states_list):
         """
         :description: Generates a state, a successor of current object, by moving one tile to the blank space
             done by switching 0 (blank) with one tile being moved
@@ -131,24 +130,20 @@ class State:
         if not self.temp in list_pattern_states:
             self.children.append(self.temp)
 
-
     def evaluate_heuristic(self):
         """
         :description: Evaluates h(n) value for each state object
-        :return: totalDist
+        :return: total_dist
         :rtype : int
         """
-        misplacedTile = 0
-        sumDist=0
+        misplaced_tile = 0
+        sum_dist = 0
 
         for i in range(9):
-            if self.node[i]!=self.goal[i]:
-                misplacedTile +=1
+            if self.node[i] != self.goal[i]:
+                misplaced_tile += 1
         for i in self.node:
-            sumDist +=math.fabs(self.node.index(i)-self.goal.index(i))
+            sum_dist += math.fabs(self.node.index(i) - self.goal.index(i))
 
-        totalDist = sumDist + misplacedTile
-        return totalDist
-
-
-
+        total_dist = sum_dist + misplaced_tile
+        return total_dist
