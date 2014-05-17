@@ -1,5 +1,5 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-from classes import *
+from class import *
 
 #### Constants ####
 # Canvas size
