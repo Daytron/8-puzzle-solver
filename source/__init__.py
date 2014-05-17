@@ -72,7 +72,7 @@ def draw(canvas):
     :param canvas: Frame's canvas
     :return: None
     """
-    global isInputGoalInstructionOn, puzzle_state
+    global isInputGoalInstructionOn
     # Positions for puzzle tiles
     x = X_POS_PUZZLE
     y = Y_POS_PUZZLE
@@ -81,10 +81,9 @@ def draw(canvas):
     s = TILE_WIDE
 
     # Draw puzzle text
-    if isButtonShowSolutionOn is False:
-        canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'monospace')
-    else:
-        canvas.draw_text('Solution:', (50, 70), 25, 'Black')
+    canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'monospace')
+
+
 
     # Draw puzzle tiles
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
@@ -179,10 +178,8 @@ def draw(canvas):
         canvas.draw_text('5', (v_centre + s, w_centre + s), 40, 'Black', 'monospace')
 
     if isTile6LockOn is True:
-        canvas.draw_polygon(
-            [[v + (2 * s), w + s], [v + (2 * s), w + (2 * s)], [v + (3 * s), w + (2 * s)], [v + (3 * s), w + s]], 2,
-            COLOR_TILE_BORDER,
-            COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + (2 * s), w + s], [v + (2 * s), w + (2 * s)], [v + (3 * s), w + (2 * s)],
+            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_text('6', (v_centre + (2 * s), w_centre + s), 40, 'Black', 'monospace')
 
     if isTile7LockOn is True:
@@ -191,16 +188,13 @@ def draw(canvas):
         canvas.draw_text('7', (v_centre, w_centre + (2 * s)), 40, 'Black', 'monospace')
 
     if isTile8LockOn is True:
-        canvas.draw_polygon(
-            [[v + s, w + (2 * s)], [v + s, w + (3 * s)], [v + (2 * s), w + (3 * s)], [v + (2 * s), w + (2 * s)]], 2,
-            COLOR_TILE_BORDER,
-            COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + s, w + (2 * s)], [v + s, w + (3 * s)], [v + (2 * s), w + (3 * s)], [v + (2 * s),
+            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_text('8', (v_centre + s, w_centre + (2 * s)), 40, 'Black', 'monospace')
 
     if isTile9LockOn is True:
         canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
-                             [v + (3 * s), w + (2 * s)]], 2,
-                            COLOR_TILE_BORDER, COLOR_BLANK_TILE)
+                             [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_BLANK_TILE)
 
     # Draw instructions for input for both initial and goal state
     if isInputPuzzleInstructionOn is True:
@@ -212,16 +206,12 @@ def draw(canvas):
             isInputGoalInstructionOn = False
 
     # Drawing puzzle tiles
-
-    if isButtonFindSolutionOn is False and isButtonShowSolutionOn is False:
-        puzzle_state = list(initState)
-
     x_centre = ((x + x + s) / 2) - 10
     y_centre = ((y + y + s) / 2) + 15
 
     draw_tile_counter = 1
 
-    for tile_init in puzzle_state:
+    for tile_init in initState:
         x_puzzle = x_centre
         y_puzzle = y_centre
 
@@ -282,8 +272,62 @@ def draw(canvas):
                 y_goal = m_centre + (2 * s)
             if tile_goal is not 0:
                 canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
-
             draw_tile_cntr += 1
+
+
+    if isButtonShowSolutionOn is True and isButtonFindSolutionOn is False:
+        tile_counter = 1
+
+        canvas.draw_text('Solution:', (X_POS_INPUT, 170), 25, 'Black')
+
+        canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + s, w], [v + s, w + s], [v + (2 * s), w + s], [v + (2 * s), w]], 2, COLOR_TILE_BORDER,
+                            COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + (2 * s), w], [v + (2 * s), w + s], [v + (3 * s), w + s], [v + (3 * s), w]], 2,
+                            COLOR_TILE_BORDER, COLOR_INPUT_BG)
+        canvas.draw_polygon([[v, w + s], [v, w + (2 * s)], [v + s, w + (2 * s)], [v + s, w + s]], 2, COLOR_TILE_BORDER,
+                            COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + s, w + s], [v + s, w + (2 * s)], [v + (2 * s), w + (2 * s)], [v + (2 * s), w + s]], 2,
+                            COLOR_TILE_BORDER, COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + (2 * s), w + s], [v + (2 * s), w + (2 * s)], [v + (3 * s), w + (2 * s)],
+            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+
+        canvas.draw_polygon([[v, w + (2 * s)], [v, w + (3 * s)], [v + s, w + (3 * s)], [v + s, w + (2 * s)]], 2,
+                            COLOR_TILE_BORDER, COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + s, w + (2 * s)], [v + s, w + (3 * s)], [v + (2 * s), w + (3 * s)], [v + (2 * s),
+            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+        canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
+                             [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+
+
+        for tile_soln in puzzle_state:
+            v_soln = v_centre
+            w_soln = w_centre
+
+            if tile_counter is 2:
+                v_soln = v_centre + s
+            elif tile_counter is 3:
+                v_soln = v_centre + (2 * s)
+            elif tile_counter is 4:
+                w_soln = w_centre + s
+            elif tile_counter is 5:
+                v_soln = v_centre + s
+                w_soln = w_centre + s
+            elif tile_counter is 6:
+                v_soln = v_centre + (2 * s)
+                w_soln = w_centre + s
+            elif tile_counter is 7:
+                w_soln = w_centre + (2 * s)
+            elif tile_counter is 8:
+                v_soln = v_centre + s
+                w_soln = w_centre + (2 * s)
+            elif tile_counter is 9:
+                v_soln = v_centre + (2 * s)
+                w_soln = w_centre + (2 * s)
+            if tile_soln is not 0:
+                canvas.draw_text(str(tile_soln), (v_soln, w_soln), 40, 'Black', 'monospace')
+            tile_counter += 1
+
     return None
 
 
@@ -416,7 +460,7 @@ def mouse_handler_input(pos):
                 tile_counter_input += 1
                 isTile9LockOn = False
 
-        puzzle_state = list(initState)
+
 
     if tile_counter_input is 10:
         if isDrawGoalText is False:
@@ -429,7 +473,8 @@ def button_find_solution():
         note: all openStates and closedStates lists hold OBJECTS not lists of tiles
     :return: None
     """
-    global master_states, isItInitialGN, openStates, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn
+    global master_states, isItInitialGN, openStates, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn, \
+        puzzle_state
 
     if isButtonFindSolutionOn is True:
         # print goalState
@@ -453,6 +498,7 @@ def button_find_solution():
 
                 isButtonFindSolutionOn = False
                 isButtonShowSolutionOn = True
+                puzzle_state = list(initState)
                 return None
 
             # Otherwise keep looking by expanding more states
