@@ -1,4 +1,7 @@
-import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+try:
+    import simplegui
+except:
+    import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from classes import *
 
 #### Constants ####
