@@ -1,8 +1,6 @@
-try:
-    import simplegui
-except:
-    import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-from classes import *
+import classes
+import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 
 #### Constants ####
 # Canvas size
@@ -71,6 +69,7 @@ isTile8LockOn = True
 isTile9LockOn = True
 isButtonFindSolutionOn = False
 isButtonShowSolutionOn = False
+
 
 def draw(canvas):
     """
@@ -199,7 +198,7 @@ def draw(canvas):
 
     if isTile6LockOn is True:
         canvas.draw_polygon([[v + (2 * s), w + s], [v + (2 * s), w + (2 * s)], [v + (3 * s), w + (2 * s)],
-            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+                            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_text('6', (v_centre + (2 * s), w_centre + s), 40, 'Black', 'monospace')
 
     if isTile7LockOn is True:
@@ -209,7 +208,7 @@ def draw(canvas):
 
     if isTile8LockOn is True:
         canvas.draw_polygon([[v + s, w + (2 * s)], [v + s, w + (3 * s)], [v + (2 * s), w + (3 * s)], [v + (2 * s),
-            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+                            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_text('8', (v_centre + s, w_centre + (2 * s)), 40, 'Black', 'monospace')
 
     if isTile9LockOn is True:
@@ -294,12 +293,9 @@ def draw(canvas):
                 canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
             draw_tile_cntr += 1
 
-
     if isButtonShowSolutionOn is True and isButtonFindSolutionOn is False:
         tile_counter = 1
-
-        canvas.draw_text('Solution:', (X_POS_INPUT, 185), 25, 'Black','sans-serif')
-
+        canvas.draw_text('Solution:', (X_POS_INPUT, 185), 25, 'Black', 'sans-serif')
         canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + s, w], [v + s, w + s], [v + (2 * s), w + s], [v + (2 * s), w]], 2, COLOR_TILE_BORDER,
                             COLOR_INPUT_BG)
@@ -310,23 +306,22 @@ def draw(canvas):
         canvas.draw_polygon([[v + s, w + s], [v + s, w + (2 * s)], [v + (2 * s), w + (2 * s)], [v + (2 * s), w + s]], 2,
                             COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + (2 * s), w + s], [v + (2 * s), w + (2 * s)], [v + (3 * s), w + (2 * s)],
-            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+                            [v + (3 * s), w + s]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
         canvas.draw_polygon([[v, w + (2 * s)], [v, w + (3 * s)], [v + s, w + (3 * s)], [v + s, w + (2 * s)]], 2,
                             COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + s, w + (2 * s)], [v + s, w + (3 * s)], [v + (2 * s), w + (3 * s)], [v + (2 * s),
-            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
+                            w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
                              [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
-
-        canvas.draw_text("Solution found.",(X_POS_INPUT-90,460),23,'DarkRed','sans-serif')
-        canvas.draw_text("* The goal state can be reached in "+str(num_moves)+" moves.",
-            (X_POS_INPUT-90,490),20,'Black','sans-serif')
-        canvas.draw_text("* There are "+str(len(explored_states))+" states explored.",
-            (X_POS_INPUT-90,515),20,'Black','sans-serif')
+        canvas.draw_text("Solution found.", (X_POS_INPUT - 90, 460), 23, 'DarkRed', 'sans-serif')
+        canvas.draw_text("* The goal state can be reached in " + str(num_moves) + " moves.",
+                         (X_POS_INPUT - 90, 490), 20, 'Black', 'sans-serif')
+        canvas.draw_text("* There are " + str(len(explored_states)) + " states explored.",
+                         (X_POS_INPUT - 90, 515), 20, 'Black', 'sans-serif')
         canvas.draw_text("* Click 'Show solution' button",
-            (X_POS_INPUT-90, 540),20,'Black','sans-serif')
+                         (X_POS_INPUT - 90, 540), 20, 'Black', 'sans-serif')
         for tile_soln in puzzle_state:
             v_soln = v_centre
             w_soln = w_centre
@@ -363,9 +358,9 @@ def initiate_draw_goal_state():
     :description: Resets variables, ready for goal state input
     :return: None
     """
-    global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, isInputPuzzleInstructionOn, \
-        isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, isTile9LockOn, \
-        isInputGoalInstructionOn, isButtonFindSolutionOn
+    global tile_counter_input, isTile1LockOn, isDrawGoalText, isTile2LockOn, isTile3LockOn, \
+        isInputPuzzleInstructionOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, isTile7LockOn, isTile8LockOn, \
+        isTile9LockOn, isInputGoalInstructionOn, isButtonFindSolutionOn
 
     tile_counter_input = 0
     isInputPuzzleInstructionOn = False
@@ -383,6 +378,7 @@ def initiate_draw_goal_state():
 
     isButtonFindSolutionOn = True
 
+
 def mouse_handler_input(pos):
     """
     :description: Mouse click handler for initial and goal state inputs
@@ -397,8 +393,8 @@ def mouse_handler_input(pos):
     if tile_counter_input < 10:
 
         if isTile1LockOn is True:
-            if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
-                    (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
+            if X_POS_INPUT < pos[0] < (X_POS_INPUT + TILE_WIDE) and \
+                    Y_POS_INPUT < pos[1] < (Y_POS_INPUT + TILE_WIDE):
                 if isDrawGoalText is False:
                     initState.append(1)
                 else:
@@ -407,8 +403,8 @@ def mouse_handler_input(pos):
                 isTile1LockOn = False
 
         if isTile2LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
-                    (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
+            if (X_POS_INPUT + TILE_WIDE) < pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and \
+                    Y_POS_INPUT < pos[1] < (Y_POS_INPUT + TILE_WIDE):
                 if isDrawGoalText is False:
                     initState.append(2)
                 else:
@@ -417,8 +413,8 @@ def mouse_handler_input(pos):
                 isTile2LockOn = False
 
         if isTile3LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
-                    (pos[1] < (Y_POS_INPUT + TILE_WIDE) and pos[1] > Y_POS_INPUT):
+            if (X_POS_INPUT + (2 * TILE_WIDE)) < pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and \
+                    Y_POS_INPUT < pos[1] < (Y_POS_INPUT + TILE_WIDE):
                 if isDrawGoalText is False:
                     initState.append(3)
                 else:
@@ -427,8 +423,8 @@ def mouse_handler_input(pos):
                 isTile3LockOn = False
 
         if isTile4LockOn is True:
-            if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
-                    (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
+            if X_POS_INPUT < pos[0] < (X_POS_INPUT + TILE_WIDE) and \
+                    (Y_POS_INPUT + TILE_WIDE) < pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(4)
                 else:
@@ -437,8 +433,8 @@ def mouse_handler_input(pos):
                 isTile4LockOn = False
 
         if isTile5LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
-                    (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
+            if (X_POS_INPUT + TILE_WIDE) < pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and \
+                    (Y_POS_INPUT + TILE_WIDE) < pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(5)
                 else:
@@ -447,8 +443,8 @@ def mouse_handler_input(pos):
                 isTile5LockOn = False
 
         if isTile6LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
-                    (pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + TILE_WIDE)):
+            if (X_POS_INPUT + (2 * TILE_WIDE)) < pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and \
+                    (Y_POS_INPUT + TILE_WIDE) < pos[1] < (Y_POS_INPUT + (2 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(6)
                 else:
@@ -458,8 +454,8 @@ def mouse_handler_input(pos):
                 return None
 
         if isTile7LockOn is True:
-            if (pos[0] < (X_POS_INPUT + TILE_WIDE) and pos[0] > X_POS_INPUT) and \
-                    (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
+            if X_POS_INPUT < pos[0] < (X_POS_INPUT + TILE_WIDE) and \
+                    (Y_POS_INPUT + (2 * TILE_WIDE)) < pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(7)
                 else:
@@ -468,8 +464,8 @@ def mouse_handler_input(pos):
                 isTile7LockOn = False
 
         if isTile8LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + TILE_WIDE)) and \
-                    (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
+            if (X_POS_INPUT + TILE_WIDE) < pos[0] < (X_POS_INPUT + (2 * TILE_WIDE)) and \
+                    (Y_POS_INPUT + (2 * TILE_WIDE)) < pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(8)
                 else:
@@ -478,16 +474,14 @@ def mouse_handler_input(pos):
                 isTile8LockOn = False
 
         if isTile9LockOn is True:
-            if (pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and pos[0] > (X_POS_INPUT + (2 * TILE_WIDE))) and \
-                    (pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)) and pos[1] > (Y_POS_INPUT + (2 * TILE_WIDE))):
+            if (X_POS_INPUT + (2 * TILE_WIDE)) < pos[0] < (X_POS_INPUT + (3 * TILE_WIDE)) and \
+                    (Y_POS_INPUT + (2 * TILE_WIDE)) < pos[1] < (Y_POS_INPUT + (3 * TILE_WIDE)):
                 if isDrawGoalText is False:
                     initState.append(0)
                 else:
                     goalState.append(0)
                 tile_counter_input += 1
                 isTile9LockOn = False
-
-
 
     if tile_counter_input is 10:
         if isDrawGoalText is False:
@@ -497,18 +491,18 @@ def mouse_handler_input(pos):
 def button_find_solution():
     """
     :description: Starts searching for solution using A star algorithm
-        note: all openStates and closedStates lists hold OBJECTS not lists of tiles
+        note: all openStates and closed_states lists hold OBJECTS not lists of tiles
     :return: None
     """
-    global master_states, isItInitialGN, openStates, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn, \
+    global master_states, openStates, explored_states, isButtonFindSolutionOn, isButtonShowSolutionOn, \
         puzzle_state
 
     if isButtonFindSolutionOn is True:
         # print goalState
         # create object for initial state and save to master states list
-        master_states.append(State(initState, initState, goalState, 0))
+        master_states.append(classes.State(initState, initState, goalState, 0))
         openStates.append(master_states[0])
-        closedStates = []
+        closed_states = []
 
         while openStates:
             x = openStates[0]
@@ -516,7 +510,7 @@ def button_find_solution():
 
             # Checks if the goal state is found
             if x.node == goalState:
-                for state in closedStates:
+                for state in closed_states:
                     explored_states.append(state)
                 explored_states.append(x)
 
@@ -533,10 +527,10 @@ def button_find_solution():
                 x.generate_children(master_states)
 
                 for child in x.children:
-                    master_states.append(State(child, initState, goalState, (x.gn + 1)))
-                    if not (master_states[-1] in openStates or master_states[-1] in closedStates):
+                    master_states.append(classes.State(child, initState, goalState, (x.gn + 1)))
+                    if not (master_states[-1] in openStates or master_states[-1] in closed_states):
                         openStates.append(master_states[-1])
-                closedStates.append(x)
+                closed_states.append(x)
                 # print openStates
                 reorder_heuristics()
         else:
@@ -581,7 +575,7 @@ def find_path():
     global solution_path
     rev_solution = []
     skip_state = []
-    next_index_elem = 0
+
     rev_states = explored_states[::-1]
     #for o in rev_states:
         #print o.node
@@ -659,6 +653,7 @@ def button_show_solution():
         puzzle_state = list(initState)
         timer.start()
 
+
 def button_quit_application():
     """
     :description: Button function to quit program
@@ -680,7 +675,7 @@ frame.set_mouseclick_handler(mouse_handler_input)
 label1 = frame.add_label('8 Puzzle Solver')
 blankSpace1 = frame.add_label('')
 label2 = frame.add_label('Instruction:')
-label3 =  frame.add_label('1. Enter initial and goal states')
+label3 = frame.add_label('1. Enter initial and goal states')
 label4 = frame.add_label('  by clicking one tile at a time')
 label5 = frame.add_label(' on keypad on the right')
 label6 = frame.add_label('2. Click Find Solution button')
@@ -695,7 +690,7 @@ blankSpace4 = frame.add_label('')
 blankSpace5 = frame.add_label('')
 blankSpace6 = frame.add_label('')
 blankSpace7 = frame.add_label('')
-button3 =  frame.add_button('Quit', button_quit_application, 120)
+button3 = frame.add_button('Quit', button_quit_application, 120)
 
 
 # Timer initialisation
