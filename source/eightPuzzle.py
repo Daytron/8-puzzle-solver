@@ -2,7 +2,9 @@ import classes
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 
-#### Constants ####
+###################
+#   Constants
+###################
 # Canvas size
 WIDTH = 700
 HEIGHT = 620
@@ -24,37 +26,47 @@ COLOR_INPUT_BG = 'White'
 COLOR_PUZZLE_BG = 'White'
 COLOR_TILE_BORDER = 'Black'
 
-
-#### Global variables ####
+##########################
+#   Global variables
+##########################
 # Tile counter
 tile_counter_input = 1
 
-# Pattern lists for initial and goal states
+# State pattern lists for initial and goal states
+# A 3 by 3 state matrix is represented by a list of tiles
+#   reading from left to right from top to bottom
+# e.g
+#   2 7 8
+#   1 0 4
+#   6 3 5
+# is [2,7,8,1,0,4,6,3,5]
 initState = []
 goalState = []
 
-# Master list of all class State objects created
+# List of all generated objects from State class
 master_states = []
 
 # Var for A star algorithm
 openStates = []
 
-# Explored path list (objects)
+# Explored path list (list of objects of State class)
+# master_states + current pointer object (goal)
 explored_states = []
 
-# Solution/Moves to reach goal (objects)
+# Solution/Moves to reach the goal (list of lists)
+# e.g. [[0,2,3,1,5,6,4,8,7],[2,0,3,1,5,6,4,8,7]]
 solution_path = []
 
-# List of tiles (integers), use for displaying tiles in the canvas
+# List of states, use to display the states in animating the solution path
 puzzle_state = []
 
-# Flag counter for timer handler
+# Counter for timer handler
 timer_counter = 0
 
-# Number of moves for the solution path for the puzzle
+# Number of moves to reach the goal
 num_moves = 0
 
-# Boolean status variables
+# Status flags
 isDrawGoalText = False
 isInputPuzzleInstructionOn = True
 isInputGoalInstructionOn = False
@@ -78,6 +90,7 @@ def draw(canvas):
     :return: None
     """
     global isInputGoalInstructionOn
+    
     # Positions for puzzle tiles
     x = X_POS_PUZZLE
     y = Y_POS_PUZZLE
@@ -101,10 +114,13 @@ def draw(canvas):
     # Specifying a different width or height in the destination than in the source will rescale the image.
     canvas.draw_image(image_logo, (298 / 2, 60 / 2), (298, 60), (520, 50), (298, 60))
 
-    # Draw puzzle text
+    ######################################
+    #   Draws the initial block (empty)
+    #####################################
+    # Displays initial state label
     canvas.draw_text('Initial State', (50, 70), 25, 'Black', 'sans-serif')
 
-    # Draw puzzle tiles
+    # Draw initial tile blocks (empty)
     canvas.draw_polygon([[x, y], [x, y + s], [x + s, y + s], [x + s, y]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
     canvas.draw_polygon([[x + s, y], [x + s, y + s], [x + (2 * s), y + s], [x + (2 * s), y]], 2, COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
@@ -132,17 +148,17 @@ def draw(canvas):
                          [x + (3 * s), y + (2 * s)]], 2, COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
 
+    ######################################
+    #   Draws the goal state block (empty)
+    ######################################
     # Positions for puzzle tiles
     n = X_POS_GOAL
     m = Y_POS_GOAL
 
-    # Square size
-    s = TILE_WIDE
-
-    # Draw puzzle text
+    # Displays goal state label
     canvas.draw_text('Goal State', (50, 360), 25, 'Black', 'sans-serif')
 
-    # Draw puzzle tiles
+    # Draw goal tile blocks (empty)
     canvas.draw_polygon([[n, m], [n, m + s], [n + s, m + s], [n + s, m]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
     canvas.draw_polygon([[n + s, m], [n + s, m + s], [n + (2 * s), m + s], [n + (2 * s), m]], 2, COLOR_TILE_BORDER,
                         COLOR_PUZZLE_BG)
@@ -164,14 +180,18 @@ def draw(canvas):
     canvas.draw_polygon([[n + (2 * s), m + (2 * s)], [n + (2 * s), m + (3 * s)], [n + (3 * s), m + (3 * s)],
                          [n + (3 * s), m + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_PUZZLE_BG)
 
+    ##################################
+    #   Draws the input keypad
+    ##################################
     # Positions for input tiles
     v = X_POS_INPUT
     w = Y_POS_INPUT
 
-    # Positions for drawing the number
+    # Positions for drawing the tile number
     v_centre = ((v + v + s) / 2) - 10
     w_centre = ((w + w + s) / 2) + 15
 
+    # Draws input keypad with the tile number
     if isTile1LockOn is True:
         canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_text('1', (v_centre, w_centre), 40, 'Black', 'monospace')
@@ -215,7 +235,7 @@ def draw(canvas):
         canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
                              [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
-    # Draw instructions for input for both initial and goal state
+    # Displays the instructions for the input, both for initial and goal state
     if isInputPuzzleInstructionOn is True:
         canvas.draw_text("Key-in the initial state:", (X_POS_INPUT - 7, 185), 25, 'Black', 'serif')
 
@@ -224,7 +244,9 @@ def draw(canvas):
         if len(goalState) is 9:
             isInputGoalInstructionOn = False
 
-    # Drawing puzzle tiles
+    ###################################################
+    # Fills the tiles of the initial state
+    ###################################################
     x_centre = ((x + x + s) / 2) - 10
     y_centre = ((y + y + s) / 2) + 15
 
@@ -259,7 +281,9 @@ def draw(canvas):
 
         draw_tile_counter += 1
 
-    # Drawing goal tiles
+    ####################################
+    # Fills the tiles of the goal state
+    ####################################
     if isDrawGoalText is True:
         draw_tile_cntr = 1
         n_centre = ((n + n + s) / 2) - 10
@@ -293,8 +317,13 @@ def draw(canvas):
                 canvas.draw_text(str(tile_goal), (x_goal, y_goal), 40, 'Black', 'monospace')
             draw_tile_cntr += 1
 
+    ###################################################################################
+    # Displays the solution block (the same position where the input block used to be)
+    ###################################################################################
     if isButtonShowSolutionOn is True and isButtonFindSolutionOn is False:
         tile_counter = 1
+
+        # Displays the tile block framework  
         canvas.draw_text('Solution:', (X_POS_INPUT, 185), 25, 'Black', 'sans-serif')
         canvas.draw_polygon([[v, w], [v, w + s], [v + s, w + s], [v + s, w]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
         canvas.draw_polygon([[v + s, w], [v + s, w + s], [v + (2 * s), w + s], [v + (2 * s), w]], 2, COLOR_TILE_BORDER,
@@ -315,6 +344,7 @@ def draw(canvas):
         canvas.draw_polygon([[v + (2 * s), w + (2 * s)], [v + (2 * s), w + (3 * s)], [v + (3 * s), w + (3 * s)],
                              [v + (3 * s), w + (2 * s)]], 2, COLOR_TILE_BORDER, COLOR_INPUT_BG)
 
+        # Displays the solution output text results on the canvas
         canvas.draw_text("Solution found.", (X_POS_INPUT - 90, 460), 23, 'DarkRed', 'sans-serif')
         canvas.draw_text("* The goal state can be reached in " + str(num_moves) + " moves.",
                          (X_POS_INPUT - 90, 490), 20, 'Black', 'sans-serif')
@@ -322,6 +352,8 @@ def draw(canvas):
                          (X_POS_INPUT - 90, 515), 20, 'Black', 'sans-serif')
         canvas.draw_text("* Click 'Show solution' button",
                          (X_POS_INPUT - 90, 540), 20, 'Black', 'sans-serif')
+        
+        # Displays the tile numbers
         for tile_soln in puzzle_state:
             v_soln = v_centre
             w_soln = w_centre
@@ -366,6 +398,7 @@ def initiate_draw_goal_state():
     isInputPuzzleInstructionOn = False
     isInputGoalInstructionOn = True
     isDrawGoalText = True
+
     isTile1LockOn = True
     isTile2LockOn = True
     isTile3LockOn = True
@@ -514,7 +547,11 @@ def button_find_solution():
                     explored_states.append(state)
                 explored_states.append(x)
 
+                # (function call) If the goal is found, trace down the path back to the initial state
+                # Neglect any non-essential states
                 find_path()
+
+                # (function call) displays the result in the console
                 display_solution()
 
                 isButtonFindSolutionOn = False
@@ -522,7 +559,8 @@ def button_find_solution():
                 puzzle_state = list(initState)
                 return None
 
-            # Otherwise keep looking by expanding more states
+            # Otherwise keep looking by expanding more states 
+            #   and assign the states with heuristic values.
             else:
                 x.generate_children(master_states)
 
@@ -531,7 +569,9 @@ def button_find_solution():
                     if not (master_states[-1] in openStates or master_states[-1] in closed_states):
                         openStates.append(master_states[-1])
                 closed_states.append(x)
-                # print openStates
+                
+                # (function call) This is where the open variable is sorted according to their f(n) value
+                #       from lowest to highest. 
                 reorder_heuristics()
         else:
             print "Failed to find a solution"
@@ -663,6 +703,7 @@ def button_quit_application():
         timer.stop()
     frame.stop()
 
+# Sets the image file for the logo
 image_logo = simplegui.load_image('file:///X:/GIT_ROOT/8-puzzle-solver/logo.png')
 
 # Frame initialisation
