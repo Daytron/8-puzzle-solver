@@ -422,7 +422,6 @@ def mouse_handler_input(pos):
         isTile3LockOn, isTile4LockOn, isTile5LockOn, isTile6LockOn, \
         isTile7LockOn, isTile8LockOn, isTile9LockOn, goalState, puzzle_state
 
-    #print "initState:", initState
     if tile_counter_input < 10:
 
         if isTile1LockOn is True:
